@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { format } from 'date-fns';
+import { format, isSameDay } from 'date-fns';
 import { StickyNote, Calendar, Info } from 'lucide-react';
 
 export function NotesPanel({ currentDate, startDate, endDate }) {
@@ -7,16 +7,26 @@ export function NotesPanel({ currentDate, startDate, endDate }) {
 
   // Determine the current context key
   const getStorageKey = () => {
-    if (startDate && endDate) {
+    if (startDate && endDate && !isSameDay(startDate, endDate)) {
       return `notes_${format(startDate, 'yyyy-MM-dd')}_to_${format(endDate, 'yyyy-MM-dd')}`;
+    } else if (startDate && (!endDate || isSameDay(startDate, endDate))) {
+      return `notes_${format(startDate, 'yyyy-MM-dd')}`;
     }
     return `notes_month_${format(currentDate, 'yyyy-MM')}`;
+  };
+
+  const getContextLabel = () => {
+    if (startDate && endDate && !isSameDay(startDate, endDate)) {
+      return `${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d, yyyy')}`;
+    } else if (startDate && (!endDate || isSameDay(startDate, endDate))) {
+      return format(startDate, 'MMMM d, yyyy');
+    }
+    return format(currentDate, 'MMMM yyyy');
   };
 
   const currentKey = getStorageKey();
 
   useEffect(() => {
-    // Load note for current context
     const savedNote = localStorage.getItem(currentKey) || '';
     setNoteContent(savedNote);
   }, [currentKey]);
@@ -31,23 +41,19 @@ export function NotesPanel({ currentDate, startDate, endDate }) {
     }
   };
 
-  const isRangeSelected = startDate && endDate;
-
   return (
-    <div className="w-full md:w-80 lg:w-96 bg-amber-50 p-6 md:p-8 flex flex-col h-full rounded-b-2xl md:rounded-bl-none md:rounded-r-2xl border-t md:border-t-0 md:border-l border-amber-200/50 shadow-inner">
-      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-amber-200/60">
-        <div className="p-2 bg-amber-100 text-amber-700 rounded-lg">
+    <div className="w-full md:w-80 lg:w-96 bg-primary-50/50 dark:bg-slate-800/80 p-6 md:p-8 flex flex-col h-full rounded-b-2xl md:rounded-bl-none md:rounded-br-2xl border-t md:border-t-0 md:border-l border-primary-200/50 dark:border-slate-700/50 shadow-inner transition-colors">
+      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-primary-200/60 dark:border-slate-700">
+        <div className="p-2 bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-400 rounded-lg transition-colors">
           <StickyNote className="w-5 h-5" />
         </div>
         <div>
-          <h3 className="font-semibold text-amber-900 leading-tight">
-            Notes & Scribbles
+          <h3 className="font-semibold text-slate-800 dark:text-slate-200 leading-tight transition-colors">
+            Notes & Events
           </h3>
-          <p className="text-xs text-amber-700/70 mt-0.5 flex items-center gap-1">
+          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1 transition-colors">
             <Calendar className="w-3 h-3" />
-            {isRangeSelected 
-              ? `${format(startDate, 'MMM d')} - ${format(endDate, 'MMM d, yyyy')}` 
-              : format(currentDate, 'MMMM yyyy')}
+            {getContextLabel()}
           </p>
         </div>
       </div>
@@ -56,20 +62,23 @@ export function NotesPanel({ currentDate, startDate, endDate }) {
         <textarea
           value={noteContent}
           onChange={handleNoteChange}
-          placeholder={isRangeSelected 
-            ? "Jot down plans for this selected trip/date range..." 
-            : "Write down monthly goals, tasks, or general reminders..."}
-          className="flex-1 w-full bg-transparent resize-none outline-none text-amber-900 placeholder:text-amber-700/40 text-[15px] leading-relaxed custom-scrollbar font-sans"
+          placeholder={startDate 
+            ? "Jot down plans, reminders, or tasks for this specific date..." 
+            : "Write down monthly goals or general reminders..."}
+          className="flex-1 w-full bg-transparent resize-none outline-none text-slate-700 dark:text-slate-300 placeholder:text-slate-400/60 dark:placeholder:text-slate-500/50 text-[15px] leading-relaxed custom-scrollbar font-sans transition-colors"
           style={{
-            backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, rgba(217, 119, 6, 0.1) 31px, rgba(217, 119, 6, 0.1) 32px)",
+            backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, var(--color-primary-500) 31px, var(--color-primary-500) 32px)",
+            backgroundSize: "100% 32px",
+            backgroundPosition: "0 6px",
             lineHeight: "32px",
-            paddingTop: "6px"
+            paddingTop: "6px",
+            opacity: 0.8
           }}
         />
         
         {/* Subtle hint when hovering */}
-        <div className="absolute -bottom-4 right-0 text-[10px] text-amber-600/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
-          <Info className="w-3 h-3" /> Auto-saved
+        <div className="absolute -bottom-4 right-0 text-[10px] text-primary-600/50 dark:text-primary-400/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+          <Info className="w-3 h-3" /> Auto-saved locally
         </div>
       </div>
     </div>
