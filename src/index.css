@@ -170,90 +170,9 @@ body {
   color: color-mix(in srgb, var(--color-active-700) 70%, #3f4f64) !important;
 }
 
-.spiral-wrap {
-  position: relative;
-  height: 46px;
-  margin: 0 12px -11px;
-  z-index: 3;
-  overflow: visible;
-}
-
-.spiral-hook {
-  position: absolute;
-  left: 50%;
-  top: -1px;
-  transform: translateX(-50%);
-  width: 56px;
-  height: 30px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 50% 55%, #bdb9b2 0 31%, #f1ede7 32% 61%, transparent 62%);
-}
-
-.spiral-hook::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 2px;
-  transform: translateX(-50%);
-  width: 34px;
-  height: 16px;
-  border: 2.5px solid #7e848d;
-  border-bottom: 0;
-  border-radius: 24px 24px 0 0;
-  box-shadow: inset 0 1px 0 #e4e8ed;
-}
-
-.spiral-hook::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 6px;
-  transform: translateX(-50%);
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 35% 35%, #fdfefe 0 21%, #9ea6b1 42%, #616973 100%);
-  box-shadow: 0 0 0 1px #c6ccd4;
-}
-
-.spiral-line {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 20px;
-  height: 2px;
-  background: linear-gradient(180deg, #b7bdc6 0%, #838992 52%, #d3d7dd 100%);
-  border-radius: 999px;
-  box-shadow: 0 1px 2px rgba(58, 63, 70, 0.28);
-}
-
-.spiral-rings {
-  position: absolute;
-  left: 6px;
-  right: 6px;
-  top: 16px;
-  height: 24px;
-  background:
-    repeating-radial-gradient(
-      ellipse 7px 11.5px at 7px 2px,
-      transparent 0 6.2px,
-      #59606a 6.8px 8.2px,
-      #dee2e9 8.6px 10.2px,
-      transparent 10.6px 16px
-    ),
-    repeating-radial-gradient(
-      ellipse 7px 11px at 7px 3px,
-      transparent 0 6.1px,
-      rgba(32, 35, 40, 0.36) 6.5px 7.4px,
-      transparent 7.8px 16px
-    );
-  background-size: 15px 24px, 15px 24px;
-  background-repeat: repeat-x;
-  filter: drop-shadow(0 1px 0 rgba(255, 255, 255, 0.68)) drop-shadow(0 1px 1px rgba(55, 60, 68, 0.22));
-}
-
 .sheet-panel {
   position: relative;
+  z-index: 2;
   box-shadow: 0 22px 38px rgba(45, 47, 53, 0.2);
 }
 

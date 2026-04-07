@@ -5,6 +5,7 @@ import { HeroSection } from './HeroSection';
 import { CalendarGrid } from './CalendarGrid';
 import { NotesPanel } from './NotesPanel';
 import { ExperienceDock } from './ExperienceDock';
+import CalendarHeader from './CalendarHeader';
 
 const MONTH_IMAGES = {
   0: '/jan.png',
@@ -180,17 +181,9 @@ export function WallCalendar() {
         className="calendar-sheet-wrapper w-full"
       >
         <div className="calendar-sheet w-full flex flex-col">
-        <div className="spiral-wrap">
-          <div className="spiral-hook" />
-          <div className="spiral-line" />
-          <div className="spiral-rings" />
-        </div>
+        <CalendarHeader />
 
-        <div className="sheet-panel overflow-hidden rounded-b-[8px] rounded-t-[3px] border border-[#cfc7be] dark:border-slate-700 bg-[#f6f2ee] dark:bg-slate-800">
-          <div className="sheet-topbar px-4 sm:px-6 h-11 flex items-center justify-between border-b border-[#dfd7cd] dark:border-slate-700/80 bg-[#f5f1ec] dark:bg-slate-800/95">
-            <div className="sheet-brand dark:text-slate-100">ChronoCanvas</div>
-            <div className="w-8" />
-          </div>
+        <div className="sheet-panel overflow-hidden rounded-b-[8px] rounded-t-[0px] border border-[#cfc7be] border-t-0 dark:border-slate-700 bg-[#f6f2ee] dark:bg-slate-800">
 
           <div className="flex flex-col bg-[#f7f3ee] dark:bg-slate-800">
             <HeroSection 
