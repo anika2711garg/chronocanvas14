@@ -1,11 +1,9 @@
-import React, { useState, useRef, useContext } from 'react';
+import React, { useState, useRef } from 'react';
 import { jsPDF } from 'jspdf';
 import { toPng } from 'html-to-image';
 import { HeroSection } from './HeroSection';
 import { CalendarGrid } from './CalendarGrid';
 import { NotesPanel } from './NotesPanel';
-import { Camera, Moon, Search, Sun } from 'lucide-react';
-import { ThemeContext } from '../App';
 import { ExperienceDock } from './ExperienceDock';
 
 const MONTH_IMAGES = {
@@ -24,7 +22,6 @@ const MONTH_IMAGES = {
 };
 
 export function WallCalendar() {
-  const { isDarkMode, toggleDarkMode } = useContext(ThemeContext);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
@@ -123,18 +120,6 @@ export function WallCalendar() {
         style={imagePalette || undefined}
         className="calendar-sheet-wrapper w-full"
       >
-        <div className="side-actions" aria-label="Quick actions">
-          <button onClick={toggleDarkMode} className="side-action-btn" aria-label="Toggle theme">
-            {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-          </button>
-          <button onClick={handleExportImage} className="side-action-btn" aria-label="Export image">
-            <Camera className="w-4 h-4" />
-          </button>
-          <button className="side-action-btn" aria-label="Search">
-            <Search className="w-4 h-4" />
-          </button>
-        </div>
-
         <div className="calendar-sheet w-full flex flex-col">
         <div className="spiral-wrap">
           <div className="spiral-hook" />

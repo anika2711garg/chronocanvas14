@@ -91,6 +91,36 @@ export function ExperienceDock({
     }).length;
   }, [timeline]);
 
+  const busiestDay = useMemo(() => {
+    if (!timeline.length) return 'None';
+    const counters = {};
+    timeline.forEach((item) => {
+      const weekday = format(parseISO(item.date), 'EEEE');
+      counters[weekday] = (counters[weekday] || 0) + 1;
+    });
+
+    return Object.entries(counters).sort((a, b) => b[1] - a[1])[0]?.[0] || 'None';
+  }, [timeline]);
+
+  const planningStreak = useMemo(() => {
+    if (!timeline.length) return 0;
+    const uniqueDays = [...new Set(timeline.map(item => item.date))].sort((a, b) => b.localeCompare(a));
+    let streak = 0;
+    let cursor = startOfDay(new Date());
+
+    for (let i = 0; i < uniqueDays.length; i += 1) {
+      const day = startOfDay(parseISO(uniqueDays[i]));
+      if (day.getTime() === cursor.getTime()) {
+        streak += 1;
+        cursor = addDays(cursor, -1);
+      } else if (day.getTime() < cursor.getTime()) {
+        break;
+      }
+    }
+
+    return streak;
+  }, [timeline]);
+
   const addSmartNote = () => {
     const content = noteText.trim();
     if (!content) return;
@@ -155,6 +185,15 @@ export function ExperienceDock({
     await onExportPdf();
   };
 
+  const applyInspirationMode = () => {
+    const randomMonth = Math.floor(Math.random() * 12);
+    const next = new Date(currentDate);
+    next.setMonth(randomMonth);
+    setCurrentDate(next);
+    setStartDate(null);
+    setEndDate(null);
+  };
+
   return (
     <aside className="feature-dock">
       <div className="feature-group feature-group-actions">
@@ -169,6 +208,10 @@ export function ExperienceDock({
           <div className="action-pill-row">
             <button onClick={onJumpToToday} className="action-pill">Today</button>
             <button onClick={onClearSelection} className="action-pill">Clear</button>
+          </div>
+
+          <div className="action-pill-row action-pill-row-single">
+            <button onClick={applyInspirationMode} className="action-pill">Inspiration Mode</button>
           </div>
 
           <div className="feature-toggles">
@@ -229,6 +272,8 @@ export function ExperienceDock({
           <span className="insight-label">events this week</span>
         </div>
         <p className="feature-stat">Total tracked events: {timeline.length}</p>
+        <p className="feature-stat">Most busy day: {busiestDay}</p>
+        <p className="feature-stat">Planning streak: {planningStreak} day{planningStreak === 1 ? '' : 's'} 🔥</p>
         <div className="feature-agenda custom-scrollbar">
           {timeline.length === 0 && <p className="feature-muted">No events yet.</p>}
           {timeline.map(item => (

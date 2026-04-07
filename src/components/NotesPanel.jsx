@@ -36,8 +36,18 @@ export function NotesPanel({ currentDate, startDate, endDate }) {
 
     try {
       const parsed = JSON.parse(savedRaw);
-      if (Array.isArray(parsed)) setNotes(parsed);
-      else setNotes([]);
+      if (Array.isArray(parsed)) {
+        const cleaned = parsed.filter((item) => {
+          if (!item || typeof item.text !== 'string') return false;
+          return item.text.trim().toLowerCase() !== 'cgc';
+        });
+
+        if (cleaned.length !== parsed.length) {
+          localStorage.setItem(currentKey, JSON.stringify(cleaned));
+        }
+
+        setNotes(cleaned);
+      } else setNotes([]);
     } catch {
       setNotes([]);
     }

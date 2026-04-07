@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   startOfMonth, endOfMonth, startOfWeek, endOfWeek, 
   eachDayOfInterval, format, isSameMonth, isSameDay, 
-  isToday, isAfter, isBefore, addMonths, subMonths,
+  isAfter, isBefore, addMonths, subMonths,
   setYear, startOfDay
 } from 'date-fns';
 import { ChevronLeft, ChevronRight, ChevronDown, Home, XCircle } from 'lucide-react';
@@ -27,10 +27,12 @@ export function CalendarGrid({
 }) {
   const [hoverDate, setHoverDate] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
-  const [dots, setDots] = useState({});
+  const [noteMetaByDate, setNoteMetaByDate] = useState({});
   const [customHolidays, setCustomHolidays] = useState([]);
   const [navDirection, setNavDirection] = useState(1);
   const [hoveredHolidayIso, setHoveredHolidayIso] = useState(null);
+  const [hoveredNoteIso, setHoveredNoteIso] = useState(null);
+  const lastWheelRef = useRef(0);
 
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(monthStart);
@@ -57,19 +59,50 @@ export function CalendarGrid({
     '12-25': 'Christmas Day'
   };
 
-  // Sync dots based on localStorage notes
+  // Sync note markers, snippets, and density from localStorage
   useEffect(() => {
-    const newDots = {};
+    const nextMeta = {};
+
+    const upsert = (dateKey, snippet, count) => {
+      if (!dateKey) return;
+      const existing = nextMeta[dateKey] || { count: 0, snippet: '' };
+      nextMeta[dateKey] = {
+        count: existing.count + count,
+        snippet: existing.snippet || snippet || ''
+      };
+    };
+
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
-      if (key.startsWith('notes_')) {
-        // Simple logic: if there's a note for exact date, or monthly note
-        if (localStorage.getItem(key).trim() !== '') {
-          newDots[key] = true;
+      if (!key) continue;
+
+      if (key.startsWith('notes_list_notes_')) {
+        try {
+          const dateKey = key.replace('notes_list_notes_', '');
+          const parsed = JSON.parse(localStorage.getItem(key));
+          if (Array.isArray(parsed) && parsed.length) {
+            const firstSnippet = typeof parsed[0]?.text === 'string' ? parsed[0].text : '';
+            upsert(dateKey, firstSnippet, parsed.length);
+          }
+        } catch {
+          // ignore malformed storage payloads
+        }
+      }
+
+      if (key.startsWith('chronocanvas_event_')) {
+        try {
+          const parsedEvent = JSON.parse(localStorage.getItem(key));
+          if (parsedEvent?.date) {
+            const eventSnippet = typeof parsedEvent.content === 'string' ? parsedEvent.content : '';
+            upsert(parsedEvent.date, eventSnippet, 1);
+          }
+        } catch {
+          // ignore malformed storage payloads
         }
       }
     }
-    setDots(newDots);
+
+    setNoteMetaByDate(nextMeta);
   }, [currentDate, startDate, endDate]);
 
   useEffect(() => {
@@ -91,8 +124,19 @@ export function CalendarGrid({
   }, []);
 
   const hasNoteForDate = (date) => {
-    const specificDateKey = `notes_${format(date, 'yyyy-MM-dd')}`;
-    return !!dots[specificDateKey] || !!dots[`notes_${format(date, 'yyyy-MM-dd')}_to_${format(date, 'yyyy-MM-dd')}`];
+    const dateKey = format(date, 'yyyy-MM-dd');
+    return !!noteMetaByDate[dateKey]?.count;
+  };
+
+  const getNoteSnippet = (date) => {
+    const dateKey = format(date, 'yyyy-MM-dd');
+    return noteMetaByDate[dateKey]?.snippet || '';
+  };
+
+  const getNoteDensity = (date) => {
+    const dateKey = format(date, 'yyyy-MM-dd');
+    const count = noteMetaByDate[dateKey]?.count || 0;
+    return Math.min(count, 4);
   };
 
   const hasNoteInSelection = (day) => {
@@ -116,6 +160,16 @@ export function CalendarGrid({
     setCurrentDate(setYear(currentDate, nextYear));
   };
 
+  const handleCalendarWheel = (event) => {
+    const now = Date.now();
+    if (now - lastWheelRef.current < 260) return;
+    if (Math.abs(event.deltaY) < 16) return;
+
+    lastWheelRef.current = now;
+    if (event.deltaY > 0) handleNextMonth();
+    else handlePrevMonth();
+  };
+
   const handleMouseDown = (day) => {
     setStartDate(day);
     setEndDate(null);
@@ -137,6 +191,26 @@ export function CalendarGrid({
 
   const handleMouseUp = () => {
     setIsDragging(false);
+  };
+
+  const handleCellMouseMove = (event) => {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const x = event.clientX - rect.left;
+    const y = event.clientY - rect.top;
+    const cx = rect.width / 2;
+    const cy = rect.height / 2;
+
+    const offsetX = ((x - cx) / cx) * 2.4;
+    const offsetY = ((y - cy) / cy) * 2;
+
+    event.currentTarget.style.setProperty('--mag-x', `${offsetX.toFixed(2)}px`);
+    event.currentTarget.style.setProperty('--mag-y', `${offsetY.toFixed(2)}px`);
+  };
+
+  const handleCellMouseLeave = (event) => {
+    event.currentTarget.style.setProperty('--mag-x', '0px');
+    event.currentTarget.style.setProperty('--mag-y', '0px');
+    setHoveredNoteIso(null);
   };
 
   const handleMouseClick = (day) => {
@@ -233,6 +307,8 @@ export function CalendarGrid({
       className="w-full bg-transparent p-0 h-full flex flex-col"
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
+      onWheel={handleCalendarWheel}
+      onDoubleClick={() => onJumpToToday && onJumpToToday()}
     >
       <div className="flex items-center gap-2 mb-3 text-[#5c5f66] dark:text-slate-200">
         <button onClick={handlePrevMonth} className="sheet-nav-btn" aria-label="Previous month">
@@ -296,12 +372,20 @@ export function CalendarGrid({
             const holidayIso = format(day, 'yyyy-MM-dd');
             const showHolidayTooltip = hasHoliday && hoveredHolidayIso === holidayIso;
             const blocked = isCurrentMonth && isDateBlocked(day);
+            const noteSnippet = getNoteSnippet(day);
+            const noteDensity = getNoteDensity(day);
+            const showNotePreview = isCurrentMonth && hoveredNoteIso === holidayIso && !!noteSnippet;
 
             return (
               <motion.button
                 key={day.toISOString()}
                 onMouseDown={() => handleMouseDown(day)}
-                onMouseEnter={() => handleMouseEnter(day)}
+                onMouseEnter={() => {
+                  handleMouseEnter(day);
+                  setHoveredNoteIso(format(day, 'yyyy-MM-dd'));
+                }}
+                onMouseMove={handleCellMouseMove}
+                onMouseLeave={handleCellMouseLeave}
                 onClick={() => handleMouseClick(day)}
                 disabled={!isCurrentMonth || blocked}
                 whileTap={{
@@ -314,6 +398,9 @@ export function CalendarGrid({
                   !isCurrentMonth && 'text-[#bcc0c7] dark:text-slate-600',
                   blocked && 'opacity-35 cursor-not-allowed',
                   isCurrentMonth && 'text-[#474d57] dark:text-slate-200 hover:bg-[#edf0f3] dark:hover:bg-slate-700/35',
+                  noteDensity === 1 && 'note-heat-1',
+                  noteDensity === 2 && 'note-heat-2',
+                  noteDensity >= 3 && 'note-heat-3',
                   hasHoliday && !highlighted && !shadowHovered && 'bg-[#f0efea] dark:bg-slate-700/25',
                   shadowHovered && !highlighted && 'bg-[#e9edf2] dark:bg-slate-700/45 text-[#2f4358] dark:text-slate-100',
                   middleRange && 'ink-reveal bg-gradient-to-r from-[#dce7f5] to-[#cbd9eb] dark:from-[color:var(--color-active-600)]/35 dark:to-[color:var(--color-active-500)]/20 rounded-[4px]',
@@ -322,10 +409,6 @@ export function CalendarGrid({
                   highlighted && !middleRange && !isSelectedStart && !isSelectedEnd && 'bg-[#d6e2f2] text-[#31455b] rounded-[4px]'
                 )}
               >
-                {isToday(day) && !isSelectedStart && !isSelectedEnd && !highlighted && (
-                  <div className="absolute top-1 left-1/2 -translate-x-1/2 w-7 h-[2px] rounded-full bg-[#8ea0b8] opacity-55" />
-                )}
-
                 {hasHoliday && (
                   <div
                     className="holiday-pin absolute top-1.5 right-1.5 h-2 w-2 rounded-full bg-[color:var(--color-active-600)]"
@@ -348,9 +431,21 @@ export function CalendarGrid({
                   </motion.div>
                 )}
 
+                {showNotePreview && (
+                  <motion.div
+                    className="note-preview-tooltip absolute z-20 -bottom-11 left-1/2 -translate-x-1/2 px-2.5 py-1.5 rounded-lg whitespace-nowrap"
+                    initial={{ opacity: 0, y: -4, scale: 0.98 }}
+                    animate={{ opacity: 1, y: 0, scale: 1 }}
+                    exit={{ opacity: 0, y: -4, scale: 0.98 }}
+                    transition={{ duration: 0.16 }}
+                  >
+                    {noteSnippet}
+                  </motion.div>
+                )}
+
                 {format(day, 'd')}
 
-                {hasNotes && (
+                {hasNotes && !isSameDay(day, new Date()) && (
                   <div className={cn(
                     'absolute bottom-1.5 w-1 h-1 rounded-full transition-colors',
                     (isSelectedStart || isSelectedEnd) ? 'bg-[#1e2f43]' : 'bg-[#7d8fa4]'
