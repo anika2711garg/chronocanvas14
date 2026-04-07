@@ -87,7 +87,7 @@ export function NotesPanel({ currentDate, startDate, endDate }) {
   };
 
   return (
-    <div className="mt-4 lg:mt-0 lg:ml-4">
+    <div className="mt-4 lg:mt-0 lg:ml-4 w-full">
       <div className="notes-card">
         <div className="notes-title-wrap">
           <h3 className="month-script notes-title">Notes</h3>

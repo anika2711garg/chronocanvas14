@@ -103,6 +103,7 @@ body {
 
 .calendar-sheet {
   max-width: 786px;
+  width: 100%;
 }
 
 .calendar-sheet-wrapper {
@@ -269,6 +270,7 @@ body {
   border-radius: 8px;
   box-shadow: 0 8px 16px rgba(55, 48, 41, 0.11);
   padding: 10px;
+  width: 100%;
 }
 
 .notes-title-wrap {
@@ -353,7 +355,7 @@ body {
 }
 
 .feature-dock {
-  width: min(320px, 100%);
+  width: 100%;
   display: grid;
   gap: 12px;
 }
@@ -679,6 +681,66 @@ body {
 @media (min-width: 1281px) {
   .feature-dock {
     width: 332px;
+  }
+}
+
+@media (max-width: 640px) {
+  .sheet-panel::before {
+    height: 4px;
+  }
+
+  .notes-title {
+    font-size: 1.8rem;
+  }
+
+  .notes-list {
+    max-height: 188px;
+  }
+
+  .feature-dock {
+    gap: 10px;
+  }
+
+  .feature-group,
+  .feature-cluster,
+  .insight-strip {
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 420px) {
+  .action-pill-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+
+  .action-pill-row-single {
+    margin-top: 0;
+  }
+
+  .action-inline-row {
+    grid-template-columns: 1fr;
+  }
+
+  .action-inline-go {
+    min-width: 100%;
+  }
+
+  .export-row {
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .feature-row {
+    flex-direction: column;
+  }
+
+  .feature-grid-2 > * {
+    width: 100%;
+  }
+
+  .insight-number {
+    font-size: 1.34rem;
   }
 }
 

@@ -310,15 +310,15 @@ export function CalendarGrid({
       onWheel={handleCalendarWheel}
       onDoubleClick={() => onJumpToToday && onJumpToToday()}
     >
-      <div className="flex items-center gap-2 mb-3 text-[#5c5f66] dark:text-slate-200">
+      <div className="flex flex-wrap items-center gap-2 mb-3 text-[#5c5f66] dark:text-slate-200">
         <button onClick={handlePrevMonth} className="sheet-nav-btn" aria-label="Previous month">
           <ChevronLeft className="w-4 h-4" />
         </button>
-        <div className="relative">
+        <div className="relative min-w-[138px] flex-1 sm:flex-none">
           <select
             value={currentDate.getFullYear()}
             onChange={handleYearChange}
-            className="sheet-select appearance-none"
+            className="sheet-select appearance-none w-full sm:w-auto max-w-full"
           >
             {years.map(y => <option key={y} value={y}>{format(currentDate, 'MMMM')} {y}</option>)}
           </select>
@@ -327,7 +327,7 @@ export function CalendarGrid({
         <button onClick={handleNextMonth} className="sheet-nav-btn" aria-label="Next month">
           <ChevronRight className="w-4 h-4" />
         </button>
-        <button onClick={() => onJumpToToday && onJumpToToday()} className="sheet-today-btn ml-auto">
+        <button onClick={() => onJumpToToday && onJumpToToday()} className="sheet-today-btn ml-auto max-[420px]:ml-0 max-[420px]:w-full max-[420px]:justify-center">
           <Home className="w-3.5 h-3.5" />
           Today
         </button>
