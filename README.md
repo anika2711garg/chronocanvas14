@@ -6,7 +6,7 @@ ChronoCanvas is a premium, wall-calendar inspired web app built with React and V
 
 Add your deployed URL here after publishing:
 
-- Vercel Production Link: [Add your Vercel URL here](https://chronocanvas27.vercel.app/)
+- Vercel Production Link: [https://chronocanvas27.vercel.app/](https://chronocanvas27.vercel.app/)
 
 ## Table of Contents
 
