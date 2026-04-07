@@ -9,6 +9,7 @@ export function WallCalendar() {
   const [currentDate, setCurrentDate] = useState(new Date());
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
+  const [imagePalette, setImagePalette] = useState(null);
   const calendarRef = useRef(null);
 
   const handleJumpToToday = () => {
@@ -50,9 +51,9 @@ export function WallCalendar() {
   const currentSeason = getSeasonInfo(currentDate);
 
   return (
-    <div className="w-full max-w-6xl mx-auto flex flex-col items-center">
+    <div className="w-full mx-auto flex flex-col items-center">
       
-      <div className="w-full max-w-5xl px-4">
+      <div className="w-full px-2 sm:px-4">
         <Header 
           onJumpToToday={handleJumpToToday}
           onClearSelection={handleClearSelection}
@@ -64,21 +65,23 @@ export function WallCalendar() {
       <div 
         ref={calendarRef} 
         data-season={currentSeason}
-        className="w-full flex flex-col p-4 sm:p-2 lg:p-0"
+        style={imagePalette || undefined}
+        className="calendar-shell w-full flex flex-col p-1 sm:p-2 lg:p-0"
       >
         {/* Wall Hanger element */}
-        <div className="flex justify-center mb-4 select-none drop-shadow-md">
-          <div className="w-32 h-4 sm:h-6 bg-slate-300 dark:bg-slate-600 rounded-full flex justify-between items-center px-4 relative before:content-[''] before:absolute before:w-1.5 before:h-1.5 before:bg-slate-500 dark:before:bg-slate-800 before:rounded-full before:left-3 after:content-[''] after:absolute after:w-1.5 after:h-1.5 after:bg-slate-500 dark:after:bg-slate-800 after:rounded-full after:right-3 transition-colors">
-              <div className="w-16 h-8 border-2 border-slate-300 dark:border-slate-600 border-b-0 rounded-t-xl absolute -top-[1.125rem] sm:-top-7 left-1/2 -translate-x-1/2 transition-colors"></div>
+        <div className="flex justify-center mb-3 sm:mb-4 select-none drop-shadow-md">
+          <div className="w-34 h-4 sm:h-6 bg-[#bbb2a2] dark:bg-[#4a4340] rounded-full flex justify-between items-center px-4 relative before:content-[''] before:absolute before:w-1.5 before:h-1.5 before:bg-[#6b6256] dark:before:bg-[#1f1b19] before:rounded-full before:left-3 after:content-[''] after:absolute after:w-1.5 after:h-1.5 after:bg-[#6b6256] dark:after:bg-[#1f1b19] after:rounded-full after:right-3 transition-colors">
+              <div className="w-16 h-8 border-2 border-[#c4bbab] dark:border-[#4f4743] border-b-0 rounded-t-xl absolute -top-[1.125rem] sm:-top-7 left-[48%] -translate-x-1/2 transition-colors"></div>
           </div>
         </div>
         
-        <div className="flex flex-col md:flex-row bg-white dark:bg-slate-800 rounded-2xl shadow-2xl shadow-slate-300/50 dark:shadow-slate-900/80 min-h-[700px] border border-slate-100 dark:border-slate-700/60 overflow-hidden paper-texture transition-colors">
+        <div className="flex flex-col lg:flex-row bg-white/85 dark:bg-slate-800/85 rounded-[1.8rem] shadow-[0_24px_50px_rgba(27,40,48,0.18)] dark:shadow-[0_24px_50px_rgba(0,0,0,0.5)] min-h-[700px] border border-white/70 dark:border-slate-700/70 overflow-hidden paper-texture backdrop-blur-sm transition-colors">
           
           {/* Left Column: Image and Calendar Grid */}
-          <div className="flex-1 flex flex-col min-w-0 bg-white dark:bg-slate-800 transition-colors">
+          <div className="flex-1 flex flex-col min-w-0 bg-white/70 dark:bg-slate-800/80 transition-colors">
             <HeroSection 
               currentDate={currentDate} 
+              onPaletteExtract={setImagePalette}
             />
             <CalendarGrid 
               currentDate={currentDate}

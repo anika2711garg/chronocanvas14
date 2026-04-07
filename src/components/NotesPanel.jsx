@@ -42,42 +42,39 @@ export function NotesPanel({ currentDate, startDate, endDate }) {
   };
 
   return (
-    <div className="w-full md:w-80 lg:w-96 bg-primary-50/50 dark:bg-slate-800/80 p-6 md:p-8 flex flex-col h-full rounded-b-2xl md:rounded-bl-none md:rounded-br-2xl border-t md:border-t-0 md:border-l border-primary-200/50 dark:border-slate-700/50 shadow-inner transition-colors">
-      <div className="flex items-center gap-3 mb-6 pb-4 border-b border-primary-200/60 dark:border-slate-700">
-        <div className="p-2 bg-primary-100 dark:bg-primary-500/20 text-primary-700 dark:text-primary-400 rounded-lg transition-colors">
+    <div className="w-full lg:w-[27rem] bg-[#f8f4ea] dark:bg-[#1d252c]/88 p-6 md:p-7 flex flex-col h-full rounded-b-[1.8rem] lg:rounded-bl-none lg:rounded-br-[1.8rem] border-t lg:border-t-0 lg:border-l border-[#e8decc]/80 dark:border-slate-700/60 shadow-[inset_0_0_0_1px_rgba(255,255,255,0.3)] transition-colors">
+      <div className="flex items-center gap-3 mb-5 pb-4 border-b border-[#d9cfbd]/80 dark:border-slate-700/70">
+        <div className="p-2 bg-[color:var(--color-active-100)] dark:bg-[color:var(--color-active-600)]/25 text-[color:var(--color-active-700)] dark:text-[color:var(--color-active-100)] rounded-xl transition-colors">
           <StickyNote className="w-5 h-5" />
         </div>
         <div>
-          <h3 className="font-semibold text-slate-800 dark:text-slate-200 leading-tight transition-colors">
+          <h3 className="month-mark text-xl font-semibold text-[color:var(--ink-900)] dark:text-slate-100 leading-tight transition-colors">
             Notes & Events
           </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5 flex items-center gap-1 transition-colors">
+          <p className="text-xs text-[color:var(--ink-700)]/75 dark:text-slate-400 mt-0.5 flex items-center gap-1 transition-colors">
             <Calendar className="w-3 h-3" />
             {getContextLabel()}
           </p>
         </div>
       </div>
       
-      <div className="flex-1 flex flex-col relative group">
+      <div className="flex-1 flex flex-col relative group rounded-2xl px-3 pt-2 pb-6 bg-[#fdfbf6]/75 dark:bg-slate-800/70 shadow-[0_10px_22px_rgba(65,57,43,0.12)]">
+        <div className="pointer-events-none absolute left-6 right-5 top-6 bottom-4 opacity-60">
+          <div className="h-full w-full bg-[repeating-linear-gradient(transparent,transparent_33px,rgba(130,103,74,0.18)_33px,rgba(130,103,74,0.18)_34px)] dark:bg-[repeating-linear-gradient(transparent,transparent_33px,rgba(159,181,192,0.15)_33px,rgba(159,181,192,0.15)_34px)]" />
+        </div>
+
+        <div className="notes-script text-[color:var(--ink-700)]/70 dark:text-slate-300/75 text-[1.15rem] mb-2 px-1">Dear future me,</div>
         <textarea
           value={noteContent}
           onChange={handleNoteChange}
           placeholder={startDate 
             ? "Jot down plans, reminders, or tasks for this specific date..." 
             : "Write down monthly goals or general reminders..."}
-          className="flex-1 w-full bg-transparent resize-none outline-none text-slate-700 dark:text-slate-300 placeholder:text-slate-400/60 dark:placeholder:text-slate-500/50 text-[15px] leading-relaxed custom-scrollbar font-sans transition-colors"
-          style={{
-            backgroundImage: "repeating-linear-gradient(transparent, transparent 31px, var(--color-primary-500) 31px, var(--color-primary-500) 32px)",
-            backgroundSize: "100% 32px",
-            backgroundPosition: "0 6px",
-            lineHeight: "32px",
-            paddingTop: "6px",
-            opacity: 0.8
-          }}
+          className="relative flex-1 w-full bg-transparent resize-none outline-none text-[color:var(--ink-900)] dark:text-slate-200 placeholder:text-[color:var(--ink-700)]/45 dark:placeholder:text-slate-500/65 text-[15px] leading-[34px] custom-scrollbar font-medium transition-colors px-1"
         />
         
         {/* Subtle hint when hovering */}
-        <div className="absolute -bottom-4 right-0 text-[10px] text-primary-600/50 dark:text-primary-400/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
+        <div className="absolute -bottom-5 right-0 text-[10px] text-[color:var(--color-active-700)]/60 dark:text-[color:var(--color-active-100)]/55 opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1">
           <Info className="w-3 h-3" /> Auto-saved locally
         </div>
       </div>
