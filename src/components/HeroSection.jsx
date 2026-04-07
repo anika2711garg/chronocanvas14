@@ -3,18 +3,18 @@ import { format } from 'date-fns';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 
 const MONTH_IMAGES = {
-  0: "/winter.png", // Jan
-  1: "/winter.png", // Feb
-  2: "/spring.png", // Mar
-  3: "/spring.png", // Apr
-  4: "/spring.png", // May
-  5: "/summer.png", // Jun
-  6: "/summer.png", // Jul
-  7: "/summer.png", // Aug
-  8: "/autumn.png", // Sep
-  9: "/autumn.png", // Oct
-  10: "/autumn.png", // Nov
-  11: "/winter.png"  // Dec
+  0: "/jan.png",
+  1: "/feb.png",
+  2: "/mar.png",
+  3: "/apr.png",
+  4: "/may.png",
+  5: "/jun.png",
+  6: "/jul.png",
+  7: "/aug.png",
+  8: "/sep.png",
+  9: "/oct.png",
+  10: "/nov.png",
+  11: "/dec.png"
 };
 
 function sampleMutedPalette(img) {

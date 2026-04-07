@@ -7,18 +7,18 @@ import { NotesPanel } from './NotesPanel';
 import { ExperienceDock } from './ExperienceDock';
 
 const MONTH_IMAGES = {
-  0: '/winter.png',
-  1: '/winter.png',
-  2: '/spring.png',
-  3: '/spring.png',
-  4: '/spring.png',
-  5: '/summer.png',
-  6: '/summer.png',
-  7: '/summer.png',
-  8: '/autumn.png',
-  9: '/autumn.png',
-  10: '/autumn.png',
-  11: '/winter.png'
+  0: '/jan.png',
+  1: '/feb.png',
+  2: '/mar.png',
+  3: '/apr.png',
+  4: '/may.png',
+  5: '/jun.png',
+  6: '/jul.png',
+  7: '/aug.png',
+  8: '/sep.png',
+  9: '/oct.png',
+  10: '/nov.png',
+  11: '/dec.png'
 };
 
 export function WallCalendar() {
