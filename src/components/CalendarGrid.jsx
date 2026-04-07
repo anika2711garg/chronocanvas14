@@ -3,7 +3,7 @@ import {
   startOfMonth, endOfMonth, startOfWeek, endOfWeek, 
   eachDayOfInterval, format, isSameMonth, isSameDay, 
   isToday, isAfter, isBefore, addMonths, subMonths,
-  setYear
+  setYear, startOfDay
 } from 'date-fns';
 import { ChevronLeft, ChevronRight, ChevronDown, Home, XCircle } from 'lucide-react';
 import { clsx } from 'clsx';
@@ -20,7 +20,10 @@ export function CalendarGrid({
   endDate, setEndDate,
   onJumpToToday,
   onClearSelection,
-  hasSelection
+  hasSelection,
+  disablePastDates,
+  disableFutureDates,
+  compactMode
 }) {
   const [hoverDate, setHoverDate] = useState(null);
   const [isDragging, setIsDragging] = useState(false);
@@ -177,6 +180,14 @@ export function CalendarGrid({
     return isInRange(day) && !isSameDay(day, startDate) && !isSameDay(day, endDate);
   };
 
+  const isDateBlocked = (day) => {
+    const today = startOfDay(new Date());
+    const normalizedDay = startOfDay(day);
+    if (disablePastDates && isBefore(normalizedDay, today)) return true;
+    if (disableFutureDates && isAfter(normalizedDay, today)) return true;
+    return false;
+  };
+
   const getHolidayLabel = (day) => {
     const annualKey = format(day, 'MM-dd');
     const fixedLabel = FIXED_HOLIDAYS[annualKey];
@@ -284,6 +295,7 @@ export function CalendarGrid({
             const hasHoliday = !!holidayLabel;
             const holidayIso = format(day, 'yyyy-MM-dd');
             const showHolidayTooltip = hasHoliday && hoveredHolidayIso === holidayIso;
+            const blocked = isCurrentMonth && isDateBlocked(day);
 
             return (
               <motion.button
@@ -291,14 +303,16 @@ export function CalendarGrid({
                 onMouseDown={() => handleMouseDown(day)}
                 onMouseEnter={() => handleMouseEnter(day)}
                 onClick={() => handleMouseClick(day)}
-                disabled={!isCurrentMonth}
+                disabled={!isCurrentMonth || blocked}
                 whileTap={{
                   scale: 0.94,
                   transition: { type: 'spring', stiffness: 420, damping: 18, mass: 0.22 }
                 }}
                 className={cn(
                   'sheet-day-cell relative flex items-center justify-center text-sm sm:text-[15px] font-medium transition-all duration-200 outline-none overflow-hidden select-none',
+                  compactMode && 'sheet-day-cell-compact',
                   !isCurrentMonth && 'text-[#bcc0c7] dark:text-slate-600',
+                  blocked && 'opacity-35 cursor-not-allowed',
                   isCurrentMonth && 'text-[#474d57] dark:text-slate-200 hover:bg-[#edf0f3] dark:hover:bg-slate-700/35',
                   hasHoliday && !highlighted && !shadowHovered && 'bg-[#f0efea] dark:bg-slate-700/25',
                   shadowHovered && !highlighted && 'bg-[#e9edf2] dark:bg-slate-700/45 text-[#2f4358] dark:text-slate-100',
