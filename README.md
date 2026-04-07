@@ -6,7 +6,7 @@ ChronoCanvas is a premium, wall-calendar inspired web app built with React and V
 
 Add your deployed URL here after publishing:
 
-- Production Link: [Add deployed link here](https://your-deployed-url-here)
+- Vercel Production Link: [Add your Vercel URL here](https://your-project-name.vercel.app)
 
 ## Table of Contents
 
@@ -17,7 +17,7 @@ Add your deployed URL here after publishing:
 - Getting Started
 - Available Scripts
 - Usage Guide
-- Deployment
+- Deployment (Vercel)
 - Troubleshooting
 - Future Improvements
 
@@ -149,27 +149,65 @@ Vite will print a local URL (usually `http://localhost:5173`). Open it in your b
 - Notes and events are stored in `localStorage`.
 - Data remains available in the same browser unless manually cleared.
 
-## Deployment
+## Deployment (Vercel)
 
-ChronoCanvas can be deployed on any static hosting platform that supports Vite builds.
+ChronoCanvas is fully compatible with Vercel and works as a static Vite deployment.
 
-### Generic Build Steps
+### Option 1: Deploy with Vercel Dashboard (Recommended)
+
+1. Push your project to GitHub.
+2. Sign in to Vercel.
+3. Click New Project.
+4. Import your GitHub repository.
+5. Configure project settings:
+
+- Framework Preset: `Vite`
+- Build Command: `npm run build`
+- Output Directory: `dist`
+- Install Command: `npm install`
+
+6. Click Deploy.
+7. After deployment, copy the generated Vercel domain and paste it into the Live Demo section above.
+
+### Option 2: Deploy with Vercel CLI
+
+Install and deploy from terminal:
+
+```bash
+npm i -g vercel
+vercel
+```
+
+For production deployment:
+
+```bash
+vercel --prod
+```
+
+### Local Production Check Before Deploy
+
+Run a local production build to verify everything:
 
 ```bash
 npm install
 npm run build
+npm run preview
 ```
 
-Deploy the generated `dist/` folder.
+### Vercel Notes for This Project
 
-### Platforms You Can Use
+- No server runtime is required for this app.
+- All features run on the client side.
+- Notes/events persistence uses browser `localStorage`, so data is device/browser specific.
 
-- Vercel
-- Netlify
-- GitHub Pages
-- Firebase Hosting
+### Suggested Domain Setup (Optional)
 
-After deployment, update the link in the "Live Demo" section.
+After first deploy, you can:
+
+- Keep default domain: `your-project-name.vercel.app`
+- Add a custom domain from Vercel Project Settings > Domains
+
+After deployment, update the link in the Live Demo section.
 
 ## Troubleshooting
 
