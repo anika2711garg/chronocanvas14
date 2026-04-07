@@ -1,16 +1,201 @@
-# React + Vite
+# ChronoCanvas
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+ChronoCanvas is a premium, wall-calendar inspired web app built with React and Vite. It combines a handcrafted visual style with practical planning tools such as date-range selection, smart notes, insights, and image/PDF export.
 
-Currently, two official plugins are available:
+## Live Demo
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Add your deployed URL here after publishing:
 
-## React Compiler
+- Production Link: [Add deployed link here](https://your-deployed-url-here)
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Table of Contents
 
-## Expanding the ESLint configuration
+- Overview
+- Features
+- Tech Stack
+- Project Structure
+- Getting Started
+- Available Scripts
+- Usage Guide
+- Deployment
+- Troubleshooting
+- Future Improvements
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+## Overview
+
+ChronoCanvas is designed to feel like a real hanging wall calendar while still being fully interactive. The UI emphasizes:
+
+- A visual, handcrafted calendar experience
+- Smooth month transitions and micro interactions
+- Practical planning workflow (select dates, write notes, track events)
+- Export-friendly output for sharing or printing
+
+## Features
+
+### Calendar Experience
+
+- Month and year navigation
+- Date selection (single date and range)
+- Hover preview while selecting ranges
+- Optional compact density mode
+- Optional date disabling (past/future)
+- Holiday indicators and tooltip cards
+
+### Notes and Planning
+
+- Context-aware notes by date or date range
+- Smart note suggestions and tagging
+- Priority and emoji support for quick categorization
+- Local persistence using browser storage
+
+### Insight and Productivity
+
+- Upcoming events summary
+- Busiest day calculation
+- Planning streak tracking
+- Timeline preview of stored events
+
+### Export
+
+- Export calendar as PNG
+- Export calendar as PDF
+
+### UI/UX
+
+- Responsive layout for desktop, tablet, and mobile
+- Seasonal and mood-based visual styling
+- Hanging calendar header effect (string, nail, beam)
+
+## Tech Stack
+
+- React 19
+- Vite 8
+- Tailwind CSS 4
+- Framer Motion
+- date-fns
+- Lucide React
+- html-to-image
+- jsPDF
+
+## Project Structure
+
+```text
+chronocanvas/
+	public/
+	src/
+		assets/
+		components/
+			CalendarGrid.jsx
+			CalendarHeader.jsx
+			ExperienceDock.jsx
+			Header.jsx
+			HeroSection.jsx
+			NotesPanel.jsx
+			WallCalendar.jsx
+		App.css
+		App.jsx
+		index.css
+		main.jsx
+	eslint.config.js
+	index.html
+	package.json
+	vite.config.js
+```
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- npm 9+
+
+### Installation
+
+1. Clone the repository.
+2. Open a terminal in the project root.
+3. Install dependencies:
+
+```bash
+npm install
+```
+
+### Run Locally
+
+```bash
+npm run dev
+```
+
+Vite will print a local URL (usually `http://localhost:5173`). Open it in your browser.
+
+## Available Scripts
+
+- `npm run dev`: Start development server
+- `npm run build`: Create production build
+- `npm run preview`: Preview production build locally
+- `npm run lint`: Run ESLint checks
+
+## Usage Guide
+
+### Basic Flow
+
+1. Navigate to the month/year you want.
+2. Click a date to start selection.
+3. Click another date to complete range selection.
+4. Add notes from Notes Panel or Smart Notes.
+5. Use Export actions to download PNG/PDF.
+
+### Data Persistence
+
+- Notes and events are stored in `localStorage`.
+- Data remains available in the same browser unless manually cleared.
+
+## Deployment
+
+ChronoCanvas can be deployed on any static hosting platform that supports Vite builds.
+
+### Generic Build Steps
+
+```bash
+npm install
+npm run build
+```
+
+Deploy the generated `dist/` folder.
+
+### Platforms You Can Use
+
+- Vercel
+- Netlify
+- GitHub Pages
+- Firebase Hosting
+
+After deployment, update the link in the "Live Demo" section.
+
+## Troubleshooting
+
+### Dev Server Not Starting on a Specific Port
+
+- If a port is busy, Vite may fail to start.
+- Run `npm run dev` without forcing a port, or choose another port.
+
+### Large Chunk Warning in Build
+
+- This project may show chunk size warnings in production build output.
+- It is non-blocking but you can reduce bundle size using dynamic imports and code splitting.
+
+### Export Issues
+
+- Export relies on browser rendering and canvas capture.
+- For best results, wait for images/fonts to finish loading before exporting.
+
+## Future Improvements
+
+- Drag-and-drop event rescheduling
+- Cloud sync and authentication
+- Team collaboration calendars
+- Recurring event engine
+- Accessibility pass with keyboard-first navigation
+
+## License
+
+Add your preferred license here (for example MIT).
